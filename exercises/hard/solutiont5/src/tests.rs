@@ -33,6 +33,10 @@ mod tests {
             if duration <= Duration::from_millis(200) && result == *expected {
                 total_score += 10.0;
             }
+			else {
+				println!("Test case failed: time = {}, tp = {}, expected = {}, result = {}, duration = {:?}",
+					time, tp, expected, result, duration);
+			}
         }
         println!("Total score: {:.2}", total_score);
         assert_eq!(100.00, total_score);

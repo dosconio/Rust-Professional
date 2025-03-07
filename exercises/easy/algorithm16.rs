@@ -9,10 +9,28 @@
     Hint: Consider rotating the matrix layer by layer, starting from the outermost layer and working your way inward.
 */
 
+#[allow(unused_imports)]
 use std::fmt::{self, Display, Formatter};
 
 pub fn rotate_matrix_90_degrees(matrix: &mut Vec<Vec<i32>>) {
-    // TODO: Implement the logic to rotate the matrix 90 degrees in place
+    let m = matrix.len(); // Number of rows
+    if m == 0 {
+        return;
+    }
+    let n = matrix[0].len(); // Number of columns
+    // Transpose the matrix (swap rows and columns)
+    let mut transposed = vec![vec![0; m]; n]; // Create a new n x m matrix
+    for i in 0..m {
+        for j in 0..n {
+            transposed[j][i] = matrix[i][j];
+        }
+    }
+    // Reverse each row of the transposed matrix
+    for row in transposed.iter_mut() {
+        row.reverse();
+    }
+    // Update the original matrix
+    *matrix = transposed;
 }
 
 #[cfg(test)]

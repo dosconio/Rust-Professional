@@ -10,10 +10,22 @@
 */
 
 use std::fmt::{self, Display, Formatter};
+use std::collections::HashSet;
 
 pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
-    // TODO: Implement the logic to find the intersection of two arrays
-    Vec::new() // Placeholder return value
+    let set: HashSet<_> = nums1.into_iter().collect();
+    // Use a HashSet to store the intersection elements (to avoid duplicates)
+    let mut result_set = HashSet::new();
+    // Iterate through the second array
+    for num in nums2 {
+        if set.contains(&num) {
+            result_set.insert(num);
+        }
+    }
+    // Convert the result set to a vector
+    let mut result: Vec<i32> = result_set.into_iter().collect();
+    result.sort();
+    result
 }
 
 #[cfg(test)]

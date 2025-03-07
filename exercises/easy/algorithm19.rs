@@ -11,9 +11,63 @@
 
 use std::fmt::{self, Display, Formatter};
 
+#[derive(Clone)]
+struct Matrix([[i64; 2]; 2]);
+
+impl Matrix {
+    // Multiply two matrices
+    fn multiply(&self, other: &Matrix) -> Matrix {
+        let a = self.0;
+        let b = other.0;
+        Matrix([
+            [
+                a[0][0] * b[0][0] + a[0][1] * b[1][0],
+                a[0][0] * b[0][1] + a[0][1] * b[1][1],
+            ],
+            [
+                a[1][0] * b[0][0] + a[1][1] * b[1][0],
+                a[1][0] * b[0][1] + a[1][1] * b[1][1],
+            ],
+        ])
+    }
+
+    // Raise the matrix to the power of n using exponentiation by squaring
+    fn pow(&self, n: i32) -> Matrix {
+        if n == 0 {
+            return Matrix([[1, 0], [0, 1]]); // Identity matrix
+        }
+        if n == 1 {
+            return self.clone();
+        }
+        let mut result = Matrix([[1, 0], [0, 1]]);
+        let mut base = self.clone();
+        let mut exp = n as u32;
+
+        while exp > 0 {
+            if exp % 2 == 1 {
+                result = result.multiply(&base);
+            }
+            base = base.multiply(&base);
+            exp /= 2;
+        }
+
+        result
+    }
+}
+
 pub fn fib(n: i32) -> i32 {
-    // TODO: Implement the logic to calculate the nth Fibonacci number using matrix exponentiation
-    0 // Placeholder return value
+    if n == 0 {
+        return 0;
+    }
+    if n == 1 {
+        return 1;
+    }
+    // Define the transformation matrix
+    let matrix = Matrix([[1, 1], [1, 0]]);
+    // Compute the (n-1)th power of the matrix
+    let powered_matrix = matrix.pow(n - 1);
+    // The nth Fibonacci number is in the top left corner of the resulting matrix
+    powered_matrix.0[0][0] as i32
 }
 
 #[cfg(test)]

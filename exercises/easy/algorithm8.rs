@@ -52,30 +52,34 @@ impl<T> Default for Queue<T> {
     }
 }
 
+#[allow(non_camel_case_types)]
 pub struct myStack<T>
 {
-	//TODO
 	q1:Queue<T>,
 	q2:Queue<T>
 }
 impl<T> myStack<T> {
     pub fn new() -> Self {
         Self {
-			//TODO
 			q1:Queue::<T>::new(),
 			q2:Queue::<T>::new()
         }
     }
     pub fn push(&mut self, elem: T) {
-        //TODO
+        self.q2.enqueue(elem); // put q2 first
+        while let Ok(val) = self.q1.dequeue() {
+            self.q2.enqueue(val); // copy q1 to q2
+        }
+        std::mem::swap(&mut self.q1, &mut self.q2); // make q1 main
     }
     pub fn pop(&mut self) -> Result<T, &str> {
-        //TODO
-		Err("Stack is empty")
+		match self.q1.dequeue() {
+			Ok(val) => Ok(val),
+			Err(_) => Err("Stack is empty")
+		}
     }
     pub fn is_empty(&self) -> bool {
-		//TODO
-        true
+		self.q1.is_empty()
     }
 }
 

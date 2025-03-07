@@ -69,16 +69,40 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
-        }
-	}
 }
+
+impl<T: Ord + Clone> LinkedList<T> {
+    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self {
+        let mut result_list = LinkedList::new();
+        let mut ptr_a = list_a.start;
+        let mut ptr_b = list_b.start;
+        while let (Some(node_a), Some(node_b)) = (ptr_a, ptr_b) {
+            unsafe {
+                if node_a.as_ref().val <= node_b.as_ref().val {
+                    result_list.add(node_a.as_ref().val.clone());
+                    ptr_a = node_a.as_ref().next;
+                } else {
+                    result_list.add(node_b.as_ref().val.clone());
+                    ptr_b = node_b.as_ref().next;
+                }
+            }
+        }
+        while let Some(node_a) = ptr_a {
+            unsafe {
+                result_list.add(node_a.as_ref().val.clone());
+                ptr_a = node_a.as_ref().next;
+            }
+        }
+        while let Some(node_b) = ptr_b {
+            unsafe {
+                result_list.add(node_b.as_ref().val.clone());
+                ptr_b = node_b.as_ref().next;
+            }
+        }
+        result_list
+    }
+}
+
 
 impl<T> Display for LinkedList<T>
 where

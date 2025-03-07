@@ -10,12 +10,26 @@
 
     Hint: Consider normalizing the strings by removing non-alphabetical characters and converting to lowercase before checking.
 */
-
+#[allow(unused_imports)]
 use std::fmt::{self, Display, Formatter};
 
 pub fn are_anagrams(s1: String, s2: String) -> bool {
-    // TODO: Implement the logic to check if two strings are anagrams
-    false // Placeholder return value
+    let normalize = |s: String| -> String {
+        s.chars()
+            .filter(|c| c.is_alphabetic()) // Keep only alphabetic characters
+            .map(|c| c.to_lowercase().to_string()) // Convert to lowercase
+            .collect()
+    };
+    let normalized_s1 = normalize(s1);
+    let normalized_s2 = normalize(s2);
+    // Convert the normalized strings to sorted character vectors
+    let mut chars1: Vec<char> = normalized_s1.chars().collect();
+    let mut chars2: Vec<char> = normalized_s2.chars().collect();
+    // Sort the character vectors
+    chars1.sort();
+    chars2.sort();
+    // Compare the sorted character vectors
+    chars1 == chars2
 }
 
 #[cfg(test)]

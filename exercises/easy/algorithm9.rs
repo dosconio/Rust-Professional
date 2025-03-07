@@ -37,7 +37,19 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+		self.items.push(value); // append
+		self.count += 1;
+		let mut idx = self.count;
+		// Float operation to ensure minimum heap or maximum heap nature
+		while idx > 1 {
+			let parent_idx = self.parent_idx(idx);
+			if (self.comparator)(&self.items[idx], &self.items[parent_idx]) {
+				self.items.swap(idx, parent_idx);
+				idx = parent_idx;
+			} else {
+				break;
+			}
+		}
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -57,8 +69,15 @@ where
     }
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
+        let left = self.left_child_idx(idx);
+        let right = self.right_child_idx(idx);
+        if right > self.count {
+            left // only left child present
+        } else if (self.comparator)(&self.items[left], &self.items[right]) {
+            left
+        } else {
+            right
+        }
     }
 }
 
@@ -84,8 +103,23 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.is_empty() {
+            return None;
+        }
+        let result = self.items.swap_remove(1);
+        self.count -= 1;
+        let mut idx = 1;
+        // Sinking operation, maintaining the nature of the pile
+        while self.children_present(idx) {
+            let smallest = self.smallest_child_idx(idx);
+            if (self.comparator)(&self.items[idx], &self.items[smallest]) {
+                break;
+            }
+            self.items.swap(idx, smallest);
+            idx = smallest;
+        }
+
+        Some(result)
     }
 }
 
